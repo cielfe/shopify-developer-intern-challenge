@@ -4,16 +4,25 @@
         <script src="myscripts.js"></script>
     </header>
 <body>
+<script async src="loadindex.js"></script>
+<h1>Create a new photo collection</h1>
+<h1>Upload new photos here!</h1>
 
-<h1>The input multiple attribute</h1>
-
-<p>Try selecting more than one file when browsing for files.</p>
-
-<form name="uploadForm" >
+<form id="uploadForm" name="uploadForm" method=post enctype=multipart/form-data  >
   <label for="files">Select photos to upload:</label>
-  <input type="file" id="files-to-upload" name="files" multiple><br><br>
+  <input type="file" multiple id="files-to-upload" accept="image/*"><br><br>
+  <label for="collection">Collection: </label>
+  <input type="text" list="collection-list" name="collection">
+  <datalist  id="collection-list">
+  </datalist> <br><br>
   <input type="button" value="Upload Photo(s)" onClick="uploadNewPhotos() ">
 </form>
 
+  <textarea
+      id="action-success-message"
+      readonly
+      rows="8"
+      style="width: 100%; resize: none"
+    ></textarea>
 </body>
 </html>

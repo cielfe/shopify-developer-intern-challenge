@@ -6,22 +6,19 @@ from flask_cors import CORS #allows for cross-origin requests
 
 import functionlib.globalVariables as globals
 from resources.routes import initialize_routes
+from resources.errors import errors
 
 app = Flask(__name__)
+#configure the web application
 app.config['UPLOAD_FOLDER'] = globals.UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = globals.MAX_CONTENT_LENGTH
 
 #setup the image repository apis
-api = Api(app)
+api = Api(app,errors=errors)
 CORS(app)
 initialize_routes(api)
 
-def allowed_file_ext(filename):
-    
-    if filename.index('.') == -1:
-        return False
-    file_ext_start_idx = filename.index('.') + 1
-    print("filename[file_ext_start_idx:]   ", filename[file_ext_start_idx:]  )
-    return filename[file_ext_start_idx:] in globals.ALLOWED_EXTENSIONS
+
 
 @app.route("/")
 def home():

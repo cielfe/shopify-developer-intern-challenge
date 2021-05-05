@@ -1,3 +1,4 @@
 
 UPLOAD_FOLDER = './uploads'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+MAX_CONTENT_LENGTH = 16 * 1024 * 1024
+DEFAULT_PHOTO_LOCATION = "Main Gallery"
