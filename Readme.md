@@ -1,6 +1,6 @@
 This is Ciel Emond's submission for the "Fall 2021 - Shopify Developer Intern Challenge"
 
-#Application Description#
+Markup : #Application Description#
 My image repository is called "Ciel Gallery"
 
 Users can do two things on this application. These actions are easily accessible at the top of the page:
@@ -13,7 +13,7 @@ For the error messages, the feedback includes how they can prevent the error the
 
 Below the two create actions, the photos and collections are displayed under "Photo Gallery and Collections". The main gallery is the default place where images can be saved. The collection names are bolded and are placed above the images in that specific collection.
 
-#How to run the application#
+Markup :  #How to run the application#
 
 Ciel Gallery is run using Flask (a Python web framework) and JavaScript. This application works best in a Chrome Browser.
 
