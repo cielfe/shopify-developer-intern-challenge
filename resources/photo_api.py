@@ -7,7 +7,8 @@ import json
 import os
 
 from functionlib import globalVariables as globals
-from resources.errors import NoFileSelectedError,FileTooLargeError
+from functionlib import photoCollectionFunctions as pcFunctions
+from resources.errors import NoFileSelectedError,FileTooLargeError,PhotoNameAlreadyExistsError, CollectionDoesNotExistError
 
 
 
@@ -23,7 +24,7 @@ class PhotosApi(Resource):
                 directories = dir[1]
                 upload_root_dir = False
                 photo_names[globals.DEFAULT_PHOTO_LOCATION] = dir[2]
-            #we are accessing the collections
+            #we are accessing the collections and getting all the image names
             else:
                 sub_dir_start_idx =  dir[0].rindex('\\')+1
                 collection_name = dir[0][sub_dir_start_idx:]
@@ -31,18 +32,34 @@ class PhotosApi(Resource):
             
 
         result = json.dumps(photo_names)
-
+       
         return Response(result,mimetype="application/json",status=200)
     def post(self):
         try:
+            collection = request.form['collection']
+            print(collection)
             file = request.files['file']
 
             #check if the file name is empty
             if file.filename == '' or not file:
                 raise NoFileSelectedError
+            if not pcFunctions.collectionExists(collection):
+                raise CollectionDoesNotExistError
             #secure the file name and then save it in the upload folder
             filename = secure_filename(file.filename)
-            file.save(os.path.join(globals.UPLOAD_FOLDER, filename))
+            
+            new_directory = globals.UPLOAD_FOLDER
+            
+            #if the photo is being saved to a collection (instead of the default)
+            #change the folder location
+            if not collection == globals.DEFAULT_PHOTO_LOCATION:
+                new_directory = new_directory + "/" + collection
+
+          
+            if pcFunctions.photoExistsInCollection(filename,collection):
+                raise PhotoNameAlreadyExistsError
+
+            file.save(os.path.join(new_directory, filename))
 
             
             result = json.dumps({"message":"{} uploaded successfully".format(filename)})

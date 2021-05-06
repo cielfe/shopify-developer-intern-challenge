@@ -1,56 +1,63 @@
-// async function getCollectionNames() {
-//   const url = "http://localhost:5000/api/collection"
-//   const argumentsForFetch = {
-//     method: "GET"
-//   }
-
-//   const response = await fetch(url, argumentsForFetch);
-//   const jsonResponse = await response.json();
- 
-//   if (response.status >= 200 && response.status <= 299) {
-//     const successMessage = `${response.status} ${response.statusText}`;
-//     let options = jsonResponse.collections;
-
-
-//     //create the collection options
-//     let collectionList = document.getElementById('collection-list');
-  
-
-//     options.forEach(function(item) {
-//       var option = document.createElement('option');
-//       option.value = item;
-//       option.innerHTML = item;
-//       collectionList.appendChild(option);
-//     });
-//   }
-//   else{
-//      // Handle errors
-//      const errorMessage = `${response.status} ${response.statusText} `;
-//      let userFeedback = jsonResponse.message;
-//      console.log(`An error occurred => ${errorMessage}`);
-//   }
-// }
-async function uploadNewPhotos() {
-  let errorOccurred = false;
-  let selectedCollection = document.getElementById("collection-list");
-  console.log("selectedCollection "+ selectedCollection)
-  let uploadFormFilesFiles = document.getElementById("files-to-upload").files;
-
-  // let photos = document.getElementById("files-to-upload").files
-  // console.log("photos[0].name "+ photos[0].name)
-  // console.log("photos[1].name"+ photos[1].name)
-  //   var requestBody = {
-  //       "photos":photos
-  //   }
-  if (uploadFormFilesFiles.length == 0){
-    console.log("element to change "+document.getElementById("action-success-message"))
-    document.getElementById("action-success-message").value = "No files uploaded";
+async function createNewCollection() {
+  let newCollection = document.getElementById("new-coll-name").value;
+  if (newCollection == ''){
+    document.getElementById("collection-creation-message").value = "WARNING: No collection was created because no text was inputted";
+    return
   }
-  for (var i = 0; i <  uploadFormFilesFiles.length; i++ ){
-    var data = new FormData()
-    data.append('file', uploadFormFilesFiles[0])
+ 
+  // the url
+  const url = 'http://localhost:5000/api/collection';
+
+  const argumentsForFetch = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify({'name':newCollection})
+  };
+
+
+  const response = await fetch(url, argumentsForFetch);
+  const jsonResponse = await response.json();
+  let userFeedback = jsonResponse.message;
+
+  if (response.status >= 200 && response.status <= 299) {
     
-    console.log(uploadFormFilesFiles[i])
+    const successMessage = `${response.status} ${response.statusText}`;
+    document.getElementById("collection-creation-message").value = "Successfully created collection!";
+
+        
+  } else {
+    // Handle errors
+    const errorMessage = `${response.status} ${response.statusText} `;
+    document.getElementById("collection-creation-message").value = "ERROR: "+userFeedback;
+    
+  }
+}
+async function uploadNewPhotos() {
+  //setup request body parameters 
+  let errorOccurred = false;
+  let selectedCollection = document.getElementById("selected-collection").value;
+
+  if (selectedCollection == ''){
+    selectedCollection = 'Main Gallery'
+  }
+  let uploadFormFiles= document.getElementById("files-to-upload").files;
+  
+  //let the user know that no files were selected to be updated
+  if (uploadFormFiles.length == 0){
+   
+    document.getElementById("action-success-message").value = "No files were uploaded";
+    return
+  }
+
+  //upload each photo individually
+  for (var i = 0; i <  uploadFormFiles.length; i++ ){
+    var data = new FormData()
+    data.append('file', uploadFormFiles[i])
+    data.append('collection',selectedCollection)
+    
+    console.log(uploadFormFiles[i])
      // the url
      const url = 'http://localhost:5000/api/photo';
   
@@ -63,15 +70,12 @@ async function uploadNewPhotos() {
      const response = await fetch(url, argumentsForFetch);
      const jsonResponse = await response.json();
      let userFeedback = jsonResponse.message;
+     let errorPhoto = "";
      if (response.status >= 200 && response.status <= 299) {
        
        const successMessage = `${response.status} ${response.statusText}`;
        console.log(`The response: ${successMessage}`);
-      
-
-
-   
-      
+            
      } else {
        // Handle errors
        const errorMessage = `${response.status} ${response.statusText} `;
@@ -86,12 +90,13 @@ async function uploadNewPhotos() {
 
      //break the loop if multiple files are being uploaded and an error occurs
      if (errorOccurred){
-        document.getElementById("action-success-message").value = "ERROR: "+userFeedback;
+        errorPhoto = uploadFormFiles[0].name;
+        document.getElementById("action-success-message").value = 'ERROR for \"'+errorPhoto+"\": "+userFeedback;
         break;
      }
   }
   if (!errorOccurred){
-    document.getElementById("action-success-message").value = 'All '+ uploadFormFiles.length +' photos were uploaded successfully';
+    document.getElementById("action-success-message").value = 'All '+ uploadFormFiles.length +' photos were uploaded successfully. Please reload the page to see the new collections';
   }
   
    

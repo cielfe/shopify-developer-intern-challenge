@@ -5,24 +5,50 @@
     </header>
 <body>
 <script async src="loadindex.js"></script>
-<h1>Create a new photo collection</h1>
-<h1>Upload new photos here!</h1>
+<h1 style="text-align: center;font-family: Georgia, serif;color:#00BFFF;">Ciel Gallery: Image Repository</h1>
+<img src='ciel_logo.jpeg' style="border-radius: 50%; display: block; margin-left: auto; margin-right: auto;width:120px;height:120px;" />
+<br/>
+<h2>Create a new photo collection</h1>
+<form id="collectionNameForm">
+  <input type="text" id="new-coll-name"/>
+  <input type="button" value="Create" onClick="createNewCollection()">
+</form>
+<br/>
+<textarea
+id="collection-creation-message"
+readonly
+rows="8"
+style="width: 100%; resize: none"
+></textarea>
+<h2>Upload new photos here!</h1>
 
 <form id="uploadForm" name="uploadForm" method=post enctype=multipart/form-data  >
   <label for="files">Select photos to upload:</label>
   <input type="file" multiple id="files-to-upload" accept="image/*"><br><br>
   <label for="collection">Collection: </label>
-  <input type="text" list="collection-list" name="collection">
+  <input list="collection-list" name="collection" id="selected-collection">
   <datalist  id="collection-list">
   </datalist> <br><br>
   <input type="button" value="Upload Photo(s)" onClick="uploadNewPhotos() ">
+  <br><br>
 </form>
-
   <textarea
       id="action-success-message"
       readonly
       rows="8"
       style="width: 100%; resize: none"
     ></textarea>
+<br/>
+<div id ="photo-gallery">
+  <h1 style="text-align: center;">Photo Gallery and Collections</h1>
+  <!-- <div id="main-gallery">
+    <img src="./uploads/baby_yoda.jpg"  style="width:10%;height:10%;">
+    <img src="./uploads/check_quercus.gif"  style="width:10%;height:10%;">
+  </div>
+  <div id="collection1">
+    <h3>Toronto</h3>
+    <img src="./uploads/vacation/venice.png"  style="width:10%;height:10%;">
+  </div> -->
+</div>
 </body>
 </html>
