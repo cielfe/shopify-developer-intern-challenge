@@ -43,7 +43,7 @@ class PhotosApi(Resource):
             #check if the file name is empty
             if file.filename == '' or not file:
                 raise NoFileSelectedError
-            if not pcFunctions.collectionExists(collection):
+            if not pcFunctions.collectionExists(collection) and (not collection == globals.DEFAULT_PHOTO_LOCATION):
                 raise CollectionDoesNotExistError
             #secure the file name and then save it in the upload folder
             filename = secure_filename(file.filename)
